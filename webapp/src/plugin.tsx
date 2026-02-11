@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Action, Store} from 'redux';
+import {Store} from 'redux';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faHatCowboy} from '@fortawesome/free-solid-svg-icons';
@@ -41,7 +41,7 @@ const isSystemPost = (state: any, postId: string): boolean => {
     return isCombinedUserActivityPost(postId) || isSystemMessage(post);
 };
 
-const setupUILater = (registry: any, store: Store<object, Action<object>>): () => Promise<void> => async () => {
+const setupUILater = (registry: any, store: Store): () => Promise<void> => async () => {
     registry.registerReducer(reducer);
 
     const settings = await store.dispatch(getSettings());
@@ -283,7 +283,7 @@ export default class Plugin {
         this.haveSetupUI = true;
     };
 
-    public async initialize(registry: any, store: Store<object, Action<object>>) {
+    public async initialize(registry: any, store: Store) {
         this.setupUI = setupUILater(registry, store);
         this.haveSetupUI = false;
 
