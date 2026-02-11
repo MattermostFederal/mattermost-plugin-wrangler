@@ -25,3 +25,6 @@ server/manifest.go
 # Build artifacts
 bin/
 coverage.txt
+
+# Planning artifacts
+implementation-plans/
