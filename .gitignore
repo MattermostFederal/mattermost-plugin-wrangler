@@ -1,3 +1,30 @@
 .idea
 dist
 .DS_Store
+
+# Docker development environment
+docker/postgres-data/
+docker/mattermost/
+
+# CodeQL
+build/codeql/
+build/codeql-db/
+
+# Go
+server/go.sum
+go.work
+go.work.sum
+
+# IDE
+.vscode
+
+# Generated manifests
+webapp/src/manifest.ts
+server/manifest.go
+
+# Build artifacts
+bin/
+coverage.txt
+
+# Planning artifacts
+implementation-plans/

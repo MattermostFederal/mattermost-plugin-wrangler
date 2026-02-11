@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin"
 )
 
 const helpText = `Wrangler Plugin - Slash Command Help
@@ -68,13 +68,13 @@ func getCommandResponse(responseType, text string) *model.CommandResponse {
 // ExecuteCommand executes a given command and returns a command response.
 func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*model.CommandResponse, *model.AppError) {
 	if !p.authorizedPluginUser(args.UserId) {
-		return getCommandResponse(model.COMMAND_RESPONSE_TYPE_EPHEMERAL, "Permission denied. Please talk to your system administrator to get access."), nil
+		return getCommandResponse(model.CommandResponseTypeEphemeral, "Permission denied. Please talk to your system administrator to get access."), nil
 	}
 
 	stringArgs := strings.Split(args.Command, " ")
 
 	if len(stringArgs) < 2 {
-		return getCommandResponse(model.COMMAND_RESPONSE_TYPE_EPHEMERAL, p.getHelp()), nil
+		return getCommandResponse(model.CommandResponseTypeEphemeral, p.getHelp()), nil
 	}
 
 	command := stringArgs[1]
@@ -87,8 +87,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "thread":
+		if stringArgs[2] == "thread" {
 			handler = p.runMoveThreadCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -97,8 +96,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "thread":
+		if stringArgs[2] == "thread" {
 			handler = p.runCopyThreadCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -107,8 +105,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "message":
+		if stringArgs[2] == "message" {
 			handler = p.runAttachMessageCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -117,8 +114,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "thread":
+		if stringArgs[2] == "thread" {
 			handler = p.runMergeThreadCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -141,18 +137,17 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 	}
 
 	if handler == nil {
-		return getCommandResponse(model.COMMAND_RESPONSE_TYPE_EPHEMERAL, p.getHelp()), nil
+		return getCommandResponse(model.CommandResponseTypeEphemeral, p.getHelp()), nil
 	}
 
 	resp, userError, err := handler(stringArgs, args)
-
 	if err != nil {
 		p.API.LogError(err.Error())
 		if userError {
-			return getCommandResponse(model.COMMAND_RESPONSE_TYPE_EPHEMERAL, fmt.Sprintf("__Error: %s__\n\nRun `/wrangler help` for usage instructions.", err.Error())), nil
+			return getCommandResponse(model.CommandResponseTypeEphemeral, fmt.Sprintf("__Error: %s__\n\nRun `/wrangler help` for usage instructions.", err.Error())), nil
 		}
 
-		return getCommandResponse(model.COMMAND_RESPONSE_TYPE_EPHEMERAL, "An unknown error occurred. Please talk to your administrator for help."), nil
+		return getCommandResponse(model.CommandResponseTypeEphemeral, "An unknown error occurred. Please talk to your administrator for help."), nil
 	}
 
 	return resp, nil
@@ -163,7 +158,7 @@ func (p *Plugin) runInfoCommand(args []string, extra *model.CommandArgs) (*model
 		"[%s](https://github.com/gabrieljackson/mattermost-plugin-wrangler/commit/%s), built %s\n\n",
 		manifest.Version, BuildHashShort, BuildHash, BuildDate)
 
-	return getCommandResponse(model.COMMAND_RESPONSE_TYPE_EPHEMERAL, resp), false, nil
+	return getCommandResponse(model.CommandResponseTypeEphemeral, resp), false, nil
 }
 
 func (p *Plugin) authorizedPluginUser(userID string) bool {
@@ -202,8 +197,7 @@ func (p *Plugin) authorizedPluginUser(userID string) bool {
 	// The only user permission setting left at this point is system admins and
 	// the allowed email domain list.
 	if len(config.AllowedEmailDomain) != 0 {
-		emailDomains := strings.Split(config.AllowedEmailDomain, ",")
-		for _, emailDomain := range emailDomains {
+		for emailDomain := range strings.SplitSeq(config.AllowedEmailDomain, ",") {
 			if strings.Contains(emailDomain, "@") {
 				if user.Email == emailDomain {
 					return true

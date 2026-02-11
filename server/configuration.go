@@ -49,7 +49,7 @@ type configuration struct {
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
 // your configuration has reference types.
 func (c *configuration) Clone() *configuration {
-	var clone = *c
+	clone := *c
 	return &clone
 }
 
@@ -57,8 +57,7 @@ func (c *configuration) IsValid() error {
 	var err error
 
 	if len(c.AllowedEmailDomain) != 0 {
-		emailDomains := strings.Split(c.AllowedEmailDomain, ",")
-		for _, emailDomain := range emailDomains {
+		for emailDomain := range strings.SplitSeq(c.AllowedEmailDomain, ",") {
 			if len(emailDomain) == 0 {
 				return errors.New("AllowedEmailDomain has a trailing comma")
 			}
@@ -147,7 +146,7 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
 func (p *Plugin) OnConfigurationChange() error {
-	var configuration = new(configuration)
+	configuration := new(configuration)
 
 	// Load the public configuration fields from the Mattermost server configuration.
 	if err := p.API.LoadPluginConfiguration(configuration); err != nil {

@@ -5,13 +5,16 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin"
+	"github.com/mattermost/mattermost/server/public/pluginapi"
 )
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
 	plugin.MattermostPlugin
+
+	client *pluginapi.Client
 
 	BotUserID string
 
@@ -41,16 +44,15 @@ func (p *Plugin) OnActivate() error {
 		return errors.Wrap(err, "invalid config")
 	}
 
+	p.client = pluginapi.NewClient(p.API, p.Driver)
+
 	bot := &model.Bot{
 		Username:    "wrangler",
 		DisplayName: "Wrangler",
 		Description: "Created by the Wrangler plugin.",
 	}
-	options := []plugin.EnsureBotOption{
-		plugin.ProfileImagePath("assets/profile.png"),
-	}
 
-	botID, err := p.Helpers.EnsureBot(bot, options...)
+	botID, err := p.client.Bot.EnsureBot(bot, pluginapi.ProfileImagePath("assets/profile.png"))
 	if err != nil {
 		return errors.Wrap(err, "failed to ensure Wrangler bot")
 	}

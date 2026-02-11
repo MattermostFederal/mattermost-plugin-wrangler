@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin/plugintest"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -99,12 +99,11 @@ func TestChannelListCommand(t *testing.T) {
 
 func mockGenerateTeams(total int) []*model.Team {
 	var teams []*model.Team
-	for i := 0; i < total; i++ {
+	for i := range total {
 		teams = append(teams, &model.Team{
 			Id:   model.NewId(),
 			Name: fmt.Sprintf("team-%d", i),
 		})
-
 	}
 
 	return teams
@@ -112,12 +111,11 @@ func mockGenerateTeams(total int) []*model.Team {
 
 func mockGenerateChannels(total int) []*model.Channel {
 	var channels []*model.Channel
-	for i := 0; i < total; i++ {
+	for i := range total {
 		channels = append(channels, &model.Channel{
 			Id:   model.NewId(),
 			Name: fmt.Sprintf("channel-%d", i),
 		})
-
 	}
 
 	return channels

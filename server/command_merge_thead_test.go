@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin/plugintest"
+	"github.com/mattermost/mattermost/server/public/model"
+	"github.com/mattermost/mattermost/server/public/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -20,25 +20,25 @@ func TestMergeThreadCommand(t *testing.T) {
 		Id:     model.NewId(),
 		TeamId: team1.Id,
 		Name:   "original-channel",
-		Type:   model.CHANNEL_OPEN,
+		Type:   model.ChannelTypeOpen,
 	}
 	privateChannel := &model.Channel{
 		Id:     model.NewId(),
 		TeamId: team1.Id,
 		Name:   "private-channel",
-		Type:   model.CHANNEL_PRIVATE,
+		Type:   model.ChannelTypePrivate,
 	}
 	directChannel := &model.Channel{
 		Id:     model.NewId(),
 		TeamId: team1.Id,
 		Name:   "direct-channel",
-		Type:   model.CHANNEL_DIRECT,
+		Type:   model.ChannelTypeDirect,
 	}
 	groupChannel := &model.Channel{
 		Id:     model.NewId(),
 		TeamId: team1.Id,
 		Name:   "group-channel",
-		Type:   model.CHANNEL_GROUP,
+		Type:   model.ChannelTypeGroup,
 	}
 
 	targetTeam := &model.Team{
@@ -250,7 +250,7 @@ func TestMergeThreadCommand(t *testing.T) {
 		assert.Contains(t, resp.Text, "Error: the thread is 3 posts long, but this command is configured to only move threads of up to 1 posts")
 	})
 
-	t.Run("merge thread by link sucessfully", func(t *testing.T) {
+	t.Run("merge thread by link successfully", func(t *testing.T) {
 		// Reset the configuration from the previous test.
 		plugin.configuration.MoveThreadMaxCount = "3"
 		require.NoError(t, plugin.configuration.IsValid())
@@ -265,6 +265,5 @@ func TestMergeThreadCommand(t *testing.T) {
 		require.NoError(t, err)
 		assert.False(t, isUserError)
 		assert.Contains(t, resp.Text, "A thread with 3 message(s) has been merged")
-
 	})
 }
