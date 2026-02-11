@@ -99,12 +99,11 @@ func TestChannelListCommand(t *testing.T) {
 
 func mockGenerateTeams(total int) []*model.Team {
 	var teams []*model.Team
-	for i := 0; i < total; i++ {
+	for i := range total {
 		teams = append(teams, &model.Team{
 			Id:   model.NewId(),
 			Name: fmt.Sprintf("team-%d", i),
 		})
-
 	}
 
 	return teams
@@ -112,12 +111,11 @@ func mockGenerateTeams(total int) []*model.Team {
 
 func mockGenerateChannels(total int) []*model.Channel {
 	var channels []*model.Channel
-	for i := 0; i < total; i++ {
+	for i := range total {
 		channels = append(channels, &model.Channel{
 			Id:   model.NewId(),
 			Name: fmt.Sprintf("channel-%d", i),
 		})
-
 	}
 
 	return channels

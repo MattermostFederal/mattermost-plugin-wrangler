@@ -81,15 +81,18 @@ func (p *Plugin) handleProfileImage(w http.ResponseWriter, r *http.Request) (int
 		return respondErr(w, http.StatusInternalServerError, errors.New("internal error"))
 	}
 
-	img, err := os.Open(filepath.Join(bundlePath, "assets", "profile.png"))
+	img, err := os.Open(filepath.Join(bundlePath, "assets", "profile.png")) //nolint:gosec // path is from plugin API, not user input
 	if err != nil {
 		p.API.LogError("Unable to read profile image, err=" + err.Error())
 		return respondErr(w, http.StatusInternalServerError, errors.New("internal error"))
 	}
-	defer img.Close()
+	defer func() { _ = img.Close() }()
 
 	w.Header().Set("Content-Type", "image/png")
-	io.Copy(w, img)
+	if _, err := io.Copy(w, img); err != nil {
+		p.API.LogError("Unable to write profile image, err=" + err.Error())
+		return respondErr(w, http.StatusInternalServerError, errors.New("internal error"))
+	}
 
 	return http.StatusOK, nil
 }
@@ -99,7 +102,7 @@ func respondErr(w http.ResponseWriter, code int, err error) (int, error) {
 	return code, err
 }
 
-func respondJSON(w http.ResponseWriter, obj interface{}) (int, error) {
+func respondJSON(w http.ResponseWriter, obj any) (int, error) {
 	data, err := json.Marshal(obj)
 	if err != nil {
 		return respondErr(w, http.StatusInternalServerError, errors.WithMessage(err, "failed to marshal response"))
@@ -112,14 +115,4 @@ func respondJSON(w http.ResponseWriter, obj interface{}) (int, error) {
 	}
 
 	return http.StatusOK, nil
-}
-
-func decodeJSON(obj interface{}, body io.ReadCloser) error {
-	decoder := json.NewDecoder(body)
-	err := decoder.Decode(&obj)
-	if err != nil && err != io.EOF {
-		return err
-	}
-
-	return nil
 }

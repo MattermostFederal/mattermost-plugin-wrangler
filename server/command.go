@@ -87,8 +87,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "thread":
+		if stringArgs[2] == "thread" {
 			handler = p.runMoveThreadCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -97,8 +96,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "thread":
+		if stringArgs[2] == "thread" {
 			handler = p.runCopyThreadCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -107,8 +105,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "message":
+		if stringArgs[2] == "message" {
 			handler = p.runAttachMessageCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -117,8 +114,7 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 			break
 		}
 
-		switch stringArgs[2] {
-		case "thread":
+		if stringArgs[2] == "thread" {
 			handler = p.runMergeThreadCommand
 			stringArgs = stringArgs[3:]
 		}
@@ -145,7 +141,6 @@ func (p *Plugin) ExecuteCommand(c *plugin.Context, args *model.CommandArgs) (*mo
 	}
 
 	resp, userError, err := handler(stringArgs, args)
-
 	if err != nil {
 		p.API.LogError(err.Error())
 		if userError {

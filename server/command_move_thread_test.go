@@ -14,8 +14,7 @@ import (
 
 func TestMoveThreadCommand(t *testing.T) {
 	team1 := &model.Team{
-		Id:   model.NewId(),
-		Name: "team-1",
+		Id: model.NewId(),
 	}
 	originalChannel := &model.Channel{
 		Id:     model.NewId(),
@@ -345,7 +344,7 @@ func TestSortedPostsFromPostList(t *testing.T) {
 
 func mockGeneratePostList(total int, channelID string, systemMessages bool) *model.PostList {
 	postList := model.NewPostList()
-	for i := 0; i < total; i++ {
+	for i := range total {
 		id := model.NewId()
 		post := &model.Post{
 			Id:        id,
