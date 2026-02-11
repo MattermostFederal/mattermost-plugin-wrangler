@@ -57,8 +57,7 @@ func (c *configuration) IsValid() error {
 	var err error
 
 	if len(c.AllowedEmailDomain) != 0 {
-		emailDomains := strings.Split(c.AllowedEmailDomain, ",")
-		for _, emailDomain := range emailDomains {
+		for emailDomain := range strings.SplitSeq(c.AllowedEmailDomain, ",") {
 			if len(emailDomain) == 0 {
 				return errors.New("AllowedEmailDomain has a trailing comma")
 			}
