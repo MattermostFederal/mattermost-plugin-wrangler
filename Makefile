@@ -123,7 +123,7 @@ release-tag:
 
 ## Full release build: clean, checks, style, tests, build, SBOM audit, CodeQL, bundle with SBOMs, sign, and checksum.
 .PHONY: release
-release: release-check clean all sbom-audit codeql-analyze release-bundle release-sign release-checksum
+release: release-check clean all sbom-audit codeql-analyze security-gate release-bundle release-sign release-checksum
 	@echo ""
 	@echo "=========================================="
 	@echo "Release build complete!"
@@ -449,11 +449,11 @@ sbom-scan: install-grype
 	fi
 ifneq ($(HAS_SERVER),)
 	@echo "Scanning Go dependencies for vulnerabilities..."
-	$(GOBIN)/grype sbom:dist/sbom/server-sbom.json --output table
+	$(GOBIN)/grype sbom:dist/sbom/server-sbom.json --output table --fail-on high
 endif
 ifneq ($(HAS_WEBAPP),)
 	@echo "Scanning Node.js dependencies for vulnerabilities..."
-	$(GOBIN)/grype sbom:dist/sbom/webapp-sbom.json --output table
+	$(GOBIN)/grype sbom:dist/sbom/webapp-sbom.json --output table --fail-on high
 endif
 
 ## Generate SBOMs and scan for vulnerabilities
@@ -518,6 +518,32 @@ endif
 .PHONY: codeql-analyze
 codeql-analyze: codeql-go codeql-js
 	@echo "CodeQL analysis complete. Results in dist/codeql-*.sarif"
+
+## Check CodeQL SARIF reports for critical/high severity issues (level=error in SARIF)
+.PHONY: security-gate
+security-gate:
+	@echo "Checking security scan results for critical/high issues..."
+	@failed=0; \
+	for sarif in dist/codeql-*.sarif; do \
+		[ -f "$$sarif" ] || continue; \
+		count=$$(python3 -c "\
+import json, sys; \
+data = json.load(open(sys.argv[1])); \
+print(sum(1 for run in data.get('runs', []) for result in run.get('results', []) if result.get('level') == 'error'))" "$$sarif"); \
+		if [ "$$count" -gt 0 ]; then \
+			echo "ERROR: $$sarif contains $$count critical/high severity issue(s)."; \
+			failed=1; \
+		else \
+			echo "OK: $$sarif has no critical/high severity issues."; \
+		fi; \
+	done; \
+	if [ "$$failed" -eq 1 ]; then \
+		echo ""; \
+		echo "Security gate FAILED: Critical or high severity issues found."; \
+		echo "Review the SARIF files in dist/ for details."; \
+		exit 1; \
+	fi
+	@echo "Security gate passed."
 
 # ====================================================================================
 # Help
