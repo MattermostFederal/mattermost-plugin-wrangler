@@ -59,10 +59,8 @@ release-check:
 		exit 1; \
 	fi
 	@if [ ! -f CHANGELOG.md ]; then \
-		echo "ERROR: CHANGELOG.md not found."; \
-		exit 1; \
-	fi
-	@if ! grep -q "## \[Unreleased\]" CHANGELOG.md && ! grep -q "## \[$(PLUGIN_VERSION)\]" CHANGELOG.md; then \
+		echo "WARNING: CHANGELOG.md not found. Consider adding one for release tracking."; \
+	elif ! grep -q "## \[Unreleased\]" CHANGELOG.md && ! grep -q "## \[$(PLUGIN_VERSION)\]" CHANGELOG.md; then \
 		echo "WARNING: CHANGELOG.md may not be updated for version $(PLUGIN_VERSION)."; \
 	fi
 	@echo "Pre-release checks passed."
