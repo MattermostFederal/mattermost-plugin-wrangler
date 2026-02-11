@@ -1,0 +1,11 @@
+ignore:
+  # False positives: the mattermost/server/v8 dependency uses a Go pseudo-version
+  # (v8.0.0-20260210201214-1ac14a9dfbcc) built from the main branch (Feb 2026),
+  # which is well past all v8.1.x patch releases. Grype misidentifies the version
+  # as pre-v8.0.0 due to the pseudo-version format.
+  - vulnerability: GHSA-7664-hcp7-f497
+    package:
+      name: github.com/mattermost/mattermost/server/v8
+  - vulnerability: GHSA-fx48-xv6q-6gp3
+    package:
+      name: github.com/mattermost/mattermost/server/v8

@@ -526,10 +526,7 @@ security-gate:
 	@failed=0; \
 	for sarif in dist/codeql-*.sarif; do \
 		[ -f "$$sarif" ] || continue; \
-		count=$$(python3 -c "\
-import json, sys; \
-data = json.load(open(sys.argv[1])); \
-print(sum(1 for run in data.get('runs', []) for result in run.get('results', []) if result.get('level') == 'error'))" "$$sarif"); \
+		count=$$(python3 -c "import json,sys;data=json.load(open(sys.argv[1]));print(sum(1 for run in data.get('runs',[]) for result in run.get('results',[]) if result.get('level')=='error'))" "$$sarif"); \
 		if [ "$$count" -gt 0 ]; then \
 			echo "ERROR: $$sarif contains $$count critical/high severity issue(s)."; \
 			failed=1; \
