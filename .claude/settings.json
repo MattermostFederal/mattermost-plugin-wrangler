@@ -1,0 +1,64 @@
+{
+  "enabledPlugins": {
+    "github@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "WebSearch",
+
+      "Bash(make:*)",
+      "Bash(make test:*)",
+      "Bash(make deploy:*)",
+      "Bash(make check-style:*)",
+      "Bash(make clean:*)",
+
+      "Bash(go test:*)",
+      "Bash(go build:*)",
+      "Bash(go run:*)",
+      "Bash(go vet:*)",
+      "Bash(goimports:*)",
+      "Bash(golangci-lint run:*)",
+
+      "Bash(git add:*)",
+      "Bash(git pull:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git --git-dir=.bare worktree:*)",
+
+      "Bash(gh api:*)",
+      "Bash(gh run:*)",
+      "Bash(gh pr:*)",
+
+      "Bash(npm:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)",
+
+      "Bash(tmux new-session:*)",
+      "Bash(tmux capture-pane:*)",
+      "Bash(tmux list-sessions:*)",
+      "Bash(tmux kill-session:*)",
+
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:developers.mattermost.com)",
+      "Bash(gofmt:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:devs.mattermost.com)",
+      "WebFetch(domain:forum.mattermost.com)",
+      "Bash(grep:*)",
+      "WebFetch(domain:api.mattermost.com)",
+
+      "Bash(git stash:*)",
+      "Bash(git fetch:*)",
+      "Bash(md5:*)",
+      "Bash(file:*)"
+    ]
+  }
+}
