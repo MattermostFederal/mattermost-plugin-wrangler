@@ -52,7 +52,13 @@ const setupUILater = (registry: any, store: Store<object, Action<object>>): () =
 
         // Move/Copy Thread
         registry.registerPostDropdownMenuAction(
-            <><FontAwesomeIcon className='MenuItem__icon' icon={faHatCowboy}/>{'Move/Copy Thread'}</>,
+            <>
+                <FontAwesomeIcon
+                    className='MenuItem__icon'
+                    icon={faHatCowboy}
+                />
+                {'Move/Copy Thread'}
+            </>,
             async (postId: string) => {
                 const state = store.getState() as any;
                 let rootPostID = postId;
@@ -71,7 +77,13 @@ const setupUILater = (registry: any, store: Store<object, Action<object>>): () =
 
         // Copy to Channel
         registry.registerPostDropdownMenuAction(
-            <><FontAwesomeIcon className='MenuItem__icon' icon={faHatCowboy}/>{'Copy to Channel'}</>,
+            <>
+                <FontAwesomeIcon
+                    className='MenuItem__icon'
+                    icon={faHatCowboy}
+                />
+                {'Copy to Channel'}
+            </>,
             (postId: string) => {
                 const targetChannel = getChannelToCopyTo(store.getState() as any);
                 if (targetChannel) {
@@ -107,7 +119,13 @@ const setupUILater = (registry: any, store: Store<object, Action<object>>): () =
 
             // Merge to Thread (start step)
             registry.registerPostDropdownMenuAction(
-                <><FontAwesomeIcon className='MenuItem__icon' icon={faHatCowboy}/>{'Merge to Thread'}</>,
+                <>
+                    <FontAwesomeIcon
+                        className='MenuItem__icon'
+                        icon={faHatCowboy}
+                    />
+                    {'Merge to Thread'}
+                </>,
                 (postId: string) => {
                     const state = store.getState() as any;
                     let post = getPost(state, postId);
@@ -131,7 +149,13 @@ const setupUILater = (registry: any, store: Store<object, Action<object>>): () =
 
             // Merge to this Thread (complete step)
             registry.registerPostDropdownMenuAction(
-                <><FontAwesomeIcon className='MenuItem__icon' icon={faHatCowboy}/>{'Merge to this Thread'}</>,
+                <>
+                    <FontAwesomeIcon
+                        className='MenuItem__icon'
+                        icon={faHatCowboy}
+                    />
+                    {'Merge to this Thread'}
+                </>,
                 (postId: string) => {
                     const state = store.getState() as any;
                     const mergePost = getMergeThreadPost(state);
@@ -174,7 +198,13 @@ const setupUILater = (registry: any, store: Store<object, Action<object>>): () =
 
             // Attach to Thread (start step)
             registry.registerPostDropdownMenuAction(
-                <><FontAwesomeIcon className='MenuItem__icon' icon={faHatCowboy}/>{'Attach to Thread'}</>,
+                <>
+                    <FontAwesomeIcon
+                        className='MenuItem__icon'
+                        icon={faHatCowboy}
+                    />
+                    {'Attach to Thread'}
+                </>,
                 (postId: string) => {
                     const state = store.getState() as any;
                     const post = getPost(state, postId);
@@ -202,7 +232,13 @@ const setupUILater = (registry: any, store: Store<object, Action<object>>): () =
 
             // Attach to this Thread (complete step)
             registry.registerPostDropdownMenuAction(
-                <><FontAwesomeIcon className='MenuItem__icon' icon={faHatCowboy}/>{'Attach to this Thread'}</>,
+                <>
+                    <FontAwesomeIcon
+                        className='MenuItem__icon'
+                        icon={faHatCowboy}
+                    />
+                    {'Attach to this Thread'}
+                </>,
                 (postId: string) => {
                     const state = store.getState() as any;
                     const attachPost = getPostToBeAttached(state);
